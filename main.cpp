@@ -10,7 +10,8 @@ std::vector<complexD> GenerateRandomPoints(int, int);
 double EuclideanNormVector(const std::vector<complexD> &);/// Евклидова норма вектора
 double AbsoluteError(const std::vector<complexD> &, const std::vector<complexD> &);/// Абсолютная ошибка
 double RelativeError(const std::vector<complexD> &, const std::vector<complexD> &);/// Относительная ошибка
-void print(std::ofstream& ,const int&,const double&);/// Форматированный вывод
+template<class T1,class T2>
+void print(std::ofstream& ,const T1&,const T2 &);/// Форматированный вывод
 
 int main() {
   
@@ -19,6 +20,9 @@ int main() {
 
   std::ofstream fout1{absError};
   std::ofstream fout2{relativeError};
+
+  print(fout1,"Length","Absolute Error");
+  print(fout2,"Length","Relative Error");
 
   for (auto &length : transformationLengths) {
 
@@ -92,6 +96,7 @@ double RelativeError(const std::vector<complexD> &v1, const std::vector<complexD
   return AbsoluteError(v1, v2) / EuclideanNormVector(v1);
 }
 
-void print(std::ofstream& of,const int& len,const double& error){
-    of<< std::setw(6) << len << "\t" << std::scientific << std::setprecision(5) << error<< "\n";
+template<class T1,class T2>
+void print(std::ofstream& of,const T1& val1,const T2 & val2){
+    of<< std::setw(6) << val1 << "\t" << std::scientific << std::setprecision(5) << val2<< "\n";
 }

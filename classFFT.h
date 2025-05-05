@@ -10,7 +10,6 @@
 #include <iomanip>
 #include <numbers>
 
-
 using complexD = std::complex<double>;
 
 /**
