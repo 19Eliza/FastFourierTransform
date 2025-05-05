@@ -1,4 +1,6 @@
 #include "classFFT.h"
+#include <iostream>
+#include <fstream>
 
 const std::string absError = "AbsoluteError.txt";
 const std::string relativeError = "RelativeError.txt";
@@ -26,11 +28,11 @@ int main() {
 
     std::vector<complexD> a(input);
 
-    int N = computeFFT<double>::Resize(a);
+    int N = computeFFT::Resize(a);
 
-    std::vector<complexD> resultDirect = computeFFT<double>::FFT(a); /// прямое преобразование Фурье
+    std::vector<complexD> resultDirect = computeFFT::FFT(a); /// прямое преобразование Фурье
 
-    std::vector<complexD> resultReverse = computeFFT<double>::FFT(resultDirect, true); /// обратное преобразование Фурье
+    std::vector<complexD> resultReverse = computeFFT::FFT(resultDirect, true); /// обратное преобразование Фурье
 
     for (auto &elem : resultReverse) elem /= N;
 
