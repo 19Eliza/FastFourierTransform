@@ -1,6 +1,7 @@
 #include "classFFT.h"
 #include <iostream>
 #include <fstream>
+#include <set>
 
 const std::string absError = "AbsoluteError.txt";
 const std::string relativeError = "RelativeError.txt";
