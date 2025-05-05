@@ -15,10 +15,23 @@ const double PI = 3.14159265358979323846;
 
 using complexD = std::complex<double>;
 
+
+/**
+* @brief Вычисляет ближайшую степень двойки, не меньшую заданного числа.
+* 
+* @param num Входное число.
+* @return Ближайшая степень двойки, не меньшая num.
+*/
 inline double nearestPowerOfTwo(double num) { return pow(2, ceil(log2(num))); }
 
 template <class ElemT> class computeFFT {
 public:
+/**
+ * @brief Увиличивает размер исходного вектора до степени двойки.
+ * 
+ * @param a Исходный вектор.
+ * @return Ближайшая степень двойки, не меньшая размера исходного вектора.
+ */
   static int Resize(std::vector<std::complex<ElemT>> &a) {
     int n = a.size();
     int N = nearestPowerOfTwo(n);
@@ -27,6 +40,13 @@ public:
     return N;
   }
 
+/**
+ * @brief Вычисляет быстрое преобразование Фурье.
+ * 
+ * @param a Исходный вектор значений.
+ * @param reverse Если false — выполняется прямое БПФ; если true — обратное БПФ.
+ * @return Новый вектор комплексных чисел — результат прямого или обратного БПФ.
+ */
   static std::vector<std::complex<ElemT>> FFT(std::vector<std::complex<ElemT>> &a, bool reverse = false) {
 
     int N = a.size();

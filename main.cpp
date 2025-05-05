@@ -5,10 +5,10 @@ const std::string relativeError = "RelativeError.txt";
 
 std::vector<complexD> GenerateRandomPoints(int, int);
 
-double EuclideanNormVector(const std::vector<complexD> &);
-double AbsoluteError(const std::vector<complexD> &, const std::vector<complexD> &);
-double RelativeError(const std::vector<complexD> &, const std::vector<complexD> &);
-void print(std::ofstream& ,const int&,const double&);
+double EuclideanNormVector(const std::vector<complexD> &);/// Евклидова норма вектора
+double AbsoluteError(const std::vector<complexD> &, const std::vector<complexD> &);/// Абсолютная ошибка
+double RelativeError(const std::vector<complexD> &, const std::vector<complexD> &);/// Относительная ошибка
+void print(std::ofstream& ,const int&,const double&);/// Форматированный вывод
 
 int main() {
   
@@ -20,7 +20,7 @@ int main() {
 
   for (auto &length : transformationLengths) {
 
-    std::vector<complexD> input = GenerateRandomPoints(length, 10); //входные данные-комплексные значения
+    std::vector<complexD> input = GenerateRandomPoints(length, 10); /// входные данные-комплексные значения
 
     int n = input.size();
 
@@ -28,22 +28,30 @@ int main() {
 
     int N = computeFFT<double>::Resize(a);
 
-    std::vector<complexD> resultDirect = computeFFT<double>::FFT(a); //прямое преобразование Фурье
+    std::vector<complexD> resultDirect = computeFFT<double>::FFT(a); /// прямое преобразование Фурье
 
-    std::vector<complexD> resultReverse = computeFFT<double>::FFT(resultDirect, true); //обратное преобразование Фурье
+    std::vector<complexD> resultReverse = computeFFT<double>::FFT(resultDirect, true); /// обратное преобразование Фурье
 
     for (auto &elem : resultReverse) elem /= N;
 
-    std::vector<complexD> output(resultReverse.begin(),resultReverse.begin() + n); //выходные данные
+    std::vector<complexD> output(resultReverse.begin(),resultReverse.begin() + n); /// выходные данные
 
-    print(fout1,length,AbsoluteError(input, output)); //длина преобразования-абсолютная ошибка
+    print(fout1,length,AbsoluteError(input, output)); /// длина преобразования-абсолютная ошибка
 
-    print(fout2,length,RelativeError(input, output)); //длина преобразования-относительная ошибка
+    print(fout2,length,RelativeError(input, output)); /// длина преобразования-относительная ошибка
   }
   
   return 0;
 }
 
+
+/**
+ * @brief Генерирует n случайных комплексных значений в квадрате [-l,l]*[-l,l] .
+ * 
+ * @param n Количество комплексных значений.
+ * @param l Размер квадрата [-l,l]*[-l,l],в котором генерируются пары.
+ * @return Вектор комплексных значений.
+ */
 std::vector<complexD> GenerateRandomPoints(int n, int l) {
   std::vector<complexD> complexPoints;
   std::set<std::pair<double, double>> used;
