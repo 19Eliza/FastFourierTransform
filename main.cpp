@@ -41,11 +41,11 @@ int main() {
     return Lengths;
   };
   
-  std::set<int> transformationLengths = GenerateLengths(100, 1000); /// множество возможных
-                                                                                ///значений длины преобразования.
+  std::set<int> transformationLengths = GenerateLengths(100, 1000); /// множество возможных 100 значений
+                                                                                ///длины преобразования от [1,1000].
 
-  std::ofstream fout1{absError};/// Файловый поток для абсолютной погрешности.
-  std::ofstream fout2{relativeError};/// Файловый поток для относительной погрешности.
+  std::ofstream fout1{absError}; /// Файловый поток для абсолютной погрешности.
+  std::ofstream fout2{relativeError}; /// Файловый поток для относительной погрешности.
 
   print(fout1,"Length","Absolute Error");
   print(fout2,"Length","Relative Error");
