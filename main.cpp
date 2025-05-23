@@ -1,7 +1,13 @@
-#include "classFFT.h"
 #include <iostream>
 #include <fstream>
+#include <vector>
+#include <complex>
+#include <cmath>
+#include <numbers>
+#include <numeric>
 #include <set>
+
+#include "classFFT.h"
 
 const std::string absError = "AbsoluteError.txt";
 const std::string relativeError = "RelativeError.txt";
@@ -16,9 +22,26 @@ template<class T1,class T2>
 void print(std::ofstream& ,const T1&,const T2 &);/// Форматированный вывод.
 
 int main() {
+
+  auto MultipleOf235 = [](int num) -> bool { /// предиката проверяет, является ли число кратным 2, 3 или 5
+    return num % 2 == 0 || num % 3 == 0 || num % 5 == 0;
+  };
+
+  /// Генерирует случайным образом countLength равномерно распределённых 
+                                                        /// значений len в интервале [1,l], удовлетворяющих MultipleOf235(len) .
+  auto GenerateLengths = [MultipleOf235](int countLength, int l)->std::set<int>{
+    std::set<int> Lengths;
+    std::set<int> used;
+    std::mt19937 rng(std::random_device{}());
+    std::uniform_int_distribution<int> dist(1, l);
+    while(Lengths.size()!=countLength){
+        auto len = dist(rng);
+        if(MultipleOf235(len))Lengths.insert(len);
+    } 
+    return Lengths;
+  };
   
-  std::set<int> transformationLengths{2, 3, 4, 5, 8, 9, 16, 25, 27, 32, 64, 81, 125, 128, 243, 256, 
-                                  512, 625, 729, 1024, 2048, 2187, 3125, 4096, 6561}; /// множество возможных
+  std::set<int> transformationLengths = GenerateLengths(100, 1000); /// множество возможных
                                                                                 ///значений длины преобразования.
 
   std::ofstream fout1{absError};/// Файловый поток для абсолютной погрешности.
@@ -34,21 +57,15 @@ int main() {
 
     int n = input.size();
 
-    std::vector<complexD> a(input);
-
-    int N = computeFFT::Resize(a);///Ближайшая степень двойки, не меньшая размера исходного вектора a.
-
-    std::vector<complexD> resultDirect = computeFFT::FFT(a); /// прямое преобразование Фурье.
+    std::vector<complexD> resultDirect = computeFFT::FFT(input); /// прямое преобразование Фурье.
 
     std::vector<complexD> resultReverse = computeFFT::FFT(resultDirect, true); /// обратное преобразование Фурье.
 
-    for (auto &elem : resultReverse) elem /= N;
+    for (auto &elem : resultReverse) elem /= n;
 
-    std::vector<complexD> output(resultReverse.begin(),resultReverse.begin() + n); /// выходные данные.
+    print(fout1,length,AbsoluteError(input, resultReverse)); /// длина преобразования - абсолютная ошибка.
 
-    print(fout1,length,AbsoluteError(input, output)); /// длина преобразования-абсолютная ошибка.
-
-    print(fout2,length,RelativeError(input, output)); /// длина преобразования-относительная ошибка.
+    print(fout2,length,RelativeError(input, resultReverse)); /// длина преобразования - относительная ошибка.
   }
   
   return 0;
@@ -62,7 +79,7 @@ int main() {
  * @param l Размер квадрата [-l,l]*[-l,l],в котором генерируются пары значений {x,y}.
  * @return Вектор комплексных значений.
  */
-std::vector<complexD> GenerateRandomPoints(int n, int l) {
+  std::vector<complexD> GenerateRandomPoints(int n, int l) {
   std::vector<complexD> complexPoints;
   std::set<std::pair<double, double>> used;
   std::mt19937 rng(std::random_device{}());
@@ -73,7 +90,7 @@ std::vector<complexD> GenerateRandomPoints(int n, int l) {
     do {
       x = dist(rng);
       y = dist(rng);
-    } while (!used.insert({x, y}).second);/// Условие на отсутствие дубликатов
+    } while (!used.insert({x, y}).second );/// Условие на отсутствие дубликатов
     complexPoints.emplace_back(x, y);
   }
 
